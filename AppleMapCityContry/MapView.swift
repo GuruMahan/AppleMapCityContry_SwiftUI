@@ -38,7 +38,7 @@ struct MapView: UIViewRepresentable {
         let map = MKMapView()
         map.showsUserLocation = true
         map.delegate = context.coordinator
-//        map.setRegion(MKCoordinateRegion(center: coordinate, span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)), animated: true)
+       map.setRegion(MKCoordinateRegion(center: coordinate, span: MKCoordinateSpan(latitudeDelta: 40, longitudeDelta: 40)), animated: true)
         return map
         
     }
