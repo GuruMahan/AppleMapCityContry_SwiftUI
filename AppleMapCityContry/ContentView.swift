@@ -11,19 +11,18 @@ struct ContentView: View {
     
     @ObservedObject var viewModel = LocationManager()
     @State var landmarks: [LandMark] = [LandMark]()
-    
     @State var search: String = ""
     @State var tapped: Bool = false
     @State var showPlaceView = false
+    var coordinate : CLLocationCoordinate2D
+    
     private func getNearBYlandMarks() {
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = self.search
-        
         let search = MKLocalSearch(request: request)
         search.start { (response, error) in
             if let response = response {
                 let mapItems = response.mapItems
-                
                 self.landmarks = mapItems.map{
                     LandMark(placeMark: $0.placemark)
                 }
@@ -40,9 +39,8 @@ struct ContentView: View {
         }else{
             return UIScreen.main.bounds.size.height
         }
-
     }
-   var coordinate : CLLocationCoordinate2D
+    
     var body: some View {
         ZStack(alignment: .top) {
             MapView(landmarks: landmarks, coordinate: coordinate)
@@ -51,40 +49,29 @@ struct ContentView: View {
                     TextField("Search", text: $search, onEditingChanged: {_ in}) {
                         self.getNearBYlandMarks()
                     }
-                       
                     Button {
                         showPlaceView = true
                     } label: {
                         Text("Show")
-                           
-                              
                     }
                     .frame(width: 60,height: 33)
                     .background(Color.white)
                 } .autocapitalization(.none)
-                   
                     .font(Font.custom("Roboto-Regular", size: 16))
                     .padding()
                     .frame(height: 40)
                     .background(Color.white)
                     .cornerRadius(5)
                     .background(RoundedRectangle(cornerRadius: 5).stroke(Color.white))
-                    
-                   
             }.padding()
                 .offset(y: 44)
-         
         }
-      //  .padding()
         .sheet(isPresented: $showPlaceView) {
             PlaceListView(landmarks: self.landmarks) {
                 self.tapped.toggle()
             }.animation(.spring())
-           //     .offset(y: calculateOffset())
         }
     }
-    
-  
 }
 
 struct ContentView_Previews: PreviewProvider {
@@ -109,7 +96,6 @@ extension Color {
         default:
             (a, r, g, b) = (1, 1, 1, 0)
         }
-        
         self.init(
             .sRGB,
             red: Double(r) / 255,
